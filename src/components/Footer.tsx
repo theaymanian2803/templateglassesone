@@ -15,7 +15,7 @@ export default function Footer() {
   })
 
   return (
-    <footer className="bg-[#e8edf2] text-[#0f172a] pt-20 pb-10">
+    <footer className="bg-background text-[#0f172a] pt-20 pb-10 shadow-stone-600 shadow-md">
       <div className="container mx-auto px-6 md:px-12">
         {/* Top Section: Newsletter */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-end pb-16 border-b border-[#0f172a]/10 mb-16 gap-10">
@@ -129,10 +129,10 @@ export default function Footer() {
             </h4>
             <div className="space-y-4 text-sm font-sans text-[#334155]">
               <p className="hover:text-[#0f172a] transition-colors cursor-pointer lowercase">
-                ZOUAQOPTIQ@GMAIL.COM
+                testgmail@GMAIL.COM
               </p>
               <p className="hover:text-[#0f172a] transition-colors cursor-pointer">
-                +212 (0) 668-966898
+                +212 (0) 434223223
               </p>
               <p className="pt-2">
                 MHAMID 7 <br />

@@ -56,7 +56,7 @@ const BeforeAfterSlider = () => {
   }, [isDragging, handleMove, onStopDragging])
 
   return (
-    <div className="relative w-full bg-[#e8edf2] text-[#0f172a] py-16 md:py-24 overflow-hidden">
+    <div className="relative w-full bg-gradient-to-br from-[#e8edf248] to-[#c5f1c060] text-[#0f172a] py-16 md:py-24 overflow-hidden">
       {/* Barre d'offre latérale - Masquée sur très petits écrans, visible sur desktop */}
       <div
         className="hidden md:flex absolute left-0 top-1/2 -translate-y-1/2 bg-white/30 backdrop-blur-md text-[#0f172a] items-center justify-center py-8 px-2 rounded-r-xl shadow-lg z-10"

@@ -1,65 +1,235 @@
+import { motion } from 'framer-motion'
+import { Hexagon, Infinity, Plus, ShieldCheck } from 'lucide-react'
+
+// --- Animation Variants ---
+const fadeUp = {
+  hidden: { opacity: 0, y: 30 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.8, ease: [0.22, 1, 0.36, 1] },
+  },
+}
+
+const staggerContainer = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.2 },
+  },
+}
+
 export default function AboutUs() {
   return (
-    <main className="container mx-auto px-4 md:px-8 py-16 md:py-24 max-w-7xl flex-grow min-h-[calc(100vh-24rem)]">
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
-        {/* Image Half */}
-        <div className="relative h-[600px] lg:h-[700px] w-full bg-muted flex items-center justify-center border border-border">
-          <img
-            src="/mahal.png"
-            alt="Zouaq Optique Glasses and Eye Care"
-            className="absolute inset-0 w-full h-full object-cover object-top z-10"
-          />
-        </div>
-
-        {/* Text Content Half */}
-        <div className="space-y-6">
-          <h1 className="font-serif text-3xl md:text-4xl lg:text-5xl text-foreground">
-            About Zouaq Optique
-          </h1>
-
-          <div className="w-12 h-[2px] bg-foreground mb-8"></div>
-
-          <div className="space-y-5 text-base md:text-lg font-sans text-muted-foreground leading-relaxed">
-            <p>
-              As veterans in the optical field, Zouaq Optique has proudly served our community with
-              unwavering dedication. Located in the vibrant heart of Mhamid 7, Marrakesh, we bring
-              decades of expert knowledge to ensure your vision is clear and your style is
-              impeccable.
-            </p>
-            <p>
-              We are more than just a place to buy glasses. Our dedicated team provides precise,
-              professional eye measurements, guiding you step-by-step to the best possible
-              prescriptions tailored to your unique visual needs.
-            </p>
-            <p>
-              Whether you are looking for premium, modern frames or need comprehensive help
-              understanding your eye care requirements, our experienced opticians are here to help
-              you see the world better.
-            </p>
-          </div>
-
-          {/* Quick Info Grid */}
-          <div className="pt-8">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div className="border border-border p-5 bg-transparent">
-                <h3 className="font-serif text-lg text-foreground mb-1">Visit Us</h3>
-                <p className="text-sm font-sans text-muted-foreground">
-                  Mhamid 7<br />
-                  Marrakesh, Morocco
-                </p>
+    // Updated background and layout styling, adding a border-t to feel connected to the rest of the site.
+    <main className="w-full bg-background selection:bg-black selection:text-white font-sans border-t border-border/50">
+      {/* --- Section 1: Hero-like Layout --- */}
+      <section className="container mx-auto px-4 md:px-8 py-16 lg:py-24 max-w-7xl mt-12">
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr,minmax(auto,1fr)] gap-12 lg:gap-24 items-start">
+          {/* Left: Framed Image Column, adapted with beveled corners on white area as in reference */}
+          <motion.div
+            className="relative h-[600px] lg:h-[750px] w-full"
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 1, ease: 'easeOut' }}>
+            {/* White card with custom polygon shape (beveled bottom-right corner) */}
+            <div
+              className="absolute inset-0 bg-white border border-border overflow-hidden p-6"
+              style={{
+                clipPath:
+                  'polygon(0% 0%, 100% 0%, 100% calc(100% - 40px), calc(100% - 40px) 100%, 0% 100%, 0% 0px)',
+              }}>
+              {/* Image framed with a border and object-cover */}
+              <div className="w-full h-full border-[10px] border-white z-10">
+                <img
+                  src="https://plus.unsplash.com/premium_photo-1693222144068-513f78a25a29?q=80&w=987&auto=format&fit=crop"
+                  alt="Abstract premium placeholder"
+                  className="absolute inset-0 w-full h-full object-cover object-top"
+                />
               </div>
-              <div className="border border-border p-5 bg-transparent">
-                <h3 className="font-serif text-lg text-foreground mb-1">Our Expertise</h3>
-                <p className="text-sm font-sans text-muted-foreground">
-                  Premium Eyewear
-                  <br />
-                  Eye Measurements & Prescriptions
-                </p>
+
+              {/* Decorative placeholder elements inspired by reference */}
+              <div className="absolute top-1/2 left-6 transform -translate-y-1/2 flex flex-col gap-3">
+                <img
+                  src="/images/placeholder-profile.jpg"
+                  alt="Profile"
+                  className="w-10 h-10 rounded-full border border-border"
+                />
+                <div className="w-10 h-10 border border-border rounded-full flex items-center justify-center text-border">
+                  <Infinity size={18} />
+                </div>
               </div>
             </div>
-          </div>
+
+            {/* Floating generic date badge */}
+            <div className="absolute bottom-12 right-12 lg:bottom-12 lg:-right-12 w-32 h-32 bg-white rounded-full border border-border flex items-center justify-center p-2 z-20">
+              <div className="w-full h-full border border-dashed border-border rounded-full flex flex-col items-center justify-center text-center">
+                <span className="text-xs uppercase tracking-widest text-muted-foreground/80">
+                  Est
+                </span>
+                <span className="text-lg font-serif text-[#1a2b3c]">202X</span>
+              </div>
+            </div>
+          </motion.div>
+
+          {/* Right: Typography & Gibberish Content with CTA button */}
+          <motion.div
+            className="space-y-8 lg:pl-10 text-center lg:text-left flex flex-col items-center lg:items-start"
+            variants={staggerContainer}
+            initial="hidden"
+            animate="visible">
+            {/* Small centered generic badge at top */}
+            <motion.div variants={fadeUp} className="flex justify-center w-full">
+              <div className="bg-white border border-border rounded-full px-5 py-2 font-sans text-sm font-medium text-[#1a2b3c]/80 flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-border"></span>
+                Phasellus Volutpat
+              </div>
+            </motion.div>
+
+            {/* Large generic title */}
+            <motion.div variants={fadeUp}>
+              <h1 className="font-serif text-4xl md:text-5xl lg:text-7xl text-[#1a2b3c] leading-[1.05] tracking-tighter">
+                Curabitur blandit tempus porttitor.
+              </h1>
+            </motion.div>
+
+            {/* Lighter line for visual break */}
+            <motion.div variants={fadeUp} className="w-16 h-[1px] bg-border/50" />
+
+            {/* Paragraphs with Lorem Ipsum gibberish, dark navy text */}
+            <motion.div
+              variants={fadeUp}
+              className="space-y-6 text-base md:text-lg text-[#1a2b3c]/80 font-light leading-relaxed">
+              <p>
+                Nullam quis risus eget urna mollis ornare vel eu leo. Cum sociis natoque penatibus
+                et magnis dis parturient montes, nascetur ridiculus mus. Vestibulum id ligula porta
+                felis euismod semper.
+              </p>
+              <p>
+                Donec ullamcorper nulla non metus auctor fringilla. Maecenas sed diam eget risus
+                varius blandit sit amet non magna. Integer posuere erat a ante venenatis dapibus
+                posuere velit aliquet.
+              </p>
+            </motion.div>
+
+            {/* Call-to-action button and detail, with dark navy button as in reference */}
+            <motion.div
+              variants={fadeUp}
+              className="flex flex-wrap items-center gap-4 justify-center lg:justify-start pt-4 w-full">
+              <button className="bg-[#1a2b3c] text-white rounded-full px-10 py-3.5 font-sans text-sm font-semibold uppercase tracking-wider hover:bg-[#2a3b4c] transition-colors">
+                Ullamcorper Fringilla
+              </button>
+              <p className="text-sm font-sans text-[#1a2b3c]/80">Vehicula Ut — 99X</p>
+            </motion.div>
+          </motion.div>
         </div>
-      </div>
+      </section>
+
+      {/* --- Section 2: Additional "Nice Content" Feature Grid for template appeal --- */}
+      <section className="container mx-auto px-4 md:px-8 py-24 max-w-7xl border-t border-border/50 mt-12 bg-white">
+        <motion.div
+          className="text-center mb-16 space-y-4"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}>
+          <h2 className="font-serif text-3xl md:text-4xl text-[#1a2b3c]">Nibh Vehicula Ut</h2>
+          <p className="text-[#1a2b3c]/70 max-w-2xl mx-auto font-light">
+            Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem
+            nec elit.
+          </p>
+        </motion.div>
+
+        {/* 3-column feature card grid, using beveled corners on white cards */}
+        <motion.div
+          className="grid grid-cols-1 md:grid-cols-3 gap-8"
+          variants={staggerContainer}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: '-100px' }}>
+          {/* Feature Card 1 */}
+          <motion.div
+            variants={fadeUp}
+            className="bg-white border border-border p-10 hover:shadow-lg transition-shadow relative"
+            style={{
+              clipPath:
+                'polygon(20px 0%, 100% 0%, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0% 100%, 0% 20px)',
+            }}>
+            <Hexagon className="w-8 h-8 text-[#1a2b3c]/70 mb-6" strokeWidth={1.5} />
+            <h3 className="font-serif text-xl text-[#1a2b3c] mb-3">Lorem Ipsum</h3>
+            <p className="text-sm text-[#1a2b3c]/70 leading-relaxed">
+              Morbi leo risus, porta ac consectetur ac, vestibulum at eros. Vivamus sagittis lacus
+              vel augue laoreet rutrum.
+            </p>
+            <div className="absolute top-6 right-6 opacity-0 group-hover:opacity-100 transition-opacity">
+              <div className="w-8 h-8 rounded-full border border-border flex items-center justify-center text-border">
+                <Plus size={16} />
+              </div>
+            </div>
+          </motion.div>
+
+          {/* Feature Card 2 */}
+          <motion.div
+            variants={fadeUp}
+            className="bg-white border border-border p-10 hover:shadow-lg transition-shadow relative"
+            style={{
+              clipPath:
+                'polygon(20px 0%, 100% 0%, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0% 100%, 0% 20px)',
+            }}>
+            <ShieldCheck className="w-8 h-8 text-[#1a2b3c]/70 mb-6" strokeWidth={1.5} />
+            <h3 className="font-serif text-xl text-[#1a2b3c] mb-3">Dolor Egestas</h3>
+            <p className="text-sm text-[#1a2b3c]/70 leading-relaxed">
+              Maecenas sed diam eget risus varius blandit sit amet non magna. Cras justo odio,
+              dapibus ac facilisis in.
+            </p>
+            <div className="absolute top-6 right-6 opacity-0 group-hover:opacity-100 transition-opacity">
+              <div className="w-8 h-8 rounded-full border border-border flex items-center justify-center text-border">
+                <Plus size={16} />
+              </div>
+            </div>
+          </motion.div>
+
+          {/* Feature Card 3 */}
+          <motion.div
+            variants={fadeUp}
+            className="bg-white border border-border p-10 hover:shadow-lg transition-shadow relative"
+            style={{
+              clipPath:
+                'polygon(20px 0%, 100% 0%, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0% 100%, 0% 20px)',
+            }}>
+            <Infinity className="w-8 h-8 text-[#1a2b3c]/70 mb-6" strokeWidth={1.5} />
+            <h3 className="font-serif text-xl text-[#1a2b3c] mb-3">Pellentesque</h3>
+            <p className="text-sm text-[#1a2b3c]/70 leading-relaxed">
+              Cras mattis consectetur purus sit amet fermentum. Nulla vitae elit libero, a pharetra
+              augue.
+            </p>
+            <div className="absolute top-6 right-6 opacity-0 group-hover:opacity-100 transition-opacity">
+              <div className="w-8 h-8 rounded-full border border-border flex items-center justify-center text-border">
+                <Plus size={16} />
+              </div>
+            </div>
+          </motion.div>
+        </motion.div>
+      </section>
+
+      {/* --- Section 3: Generic Quote Statement --- */}
+      <section className="container mx-auto px-4 py-24 max-w-4xl text-center">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 1, ease: 'easeOut' }}
+          className="space-y-8">
+          <div className="w-12 h-[1px] bg-[#1a2b3c]/30 mx-auto" />
+          <h2 className="font-serif text-2xl md:text-4xl text-[#1a2b3c]/90 leading-tight italic">
+            "Donec id elit non mi porta gravida at eget metus. Sed posuere consectetur est at
+            lobortis. Nullam id dolor id nibh ultricies."
+          </h2>
+          <div className="w-12 h-[1px] bg-[#1a2b3c]/30 mx-auto" />
+          <p className="text-xs uppercase tracking-[0.2em] text-[#1a2b3c]/40 pt-4">
+            — Commodo Cursus
+          </p>
+        </motion.div>
+      </section>
     </main>
   )
 }

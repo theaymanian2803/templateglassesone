@@ -15,6 +15,7 @@ export default function Header() {
   const [searchQuery, setSearchQuery] = useState('')
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [userMenuOpen, setUserMenuOpen] = useState(false)
+  const [isScrolled, setIsScrolled] = useState(false)
 
   const dropdownRef = useRef<HTMLDivElement>(null)
 
@@ -42,6 +43,21 @@ export default function Header() {
       return data || []
     },
   })
+
+  // Listen for scroll to toggle the header states
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 100) {
+        setIsScrolled(true)
+      } else {
+        setIsScrolled(false)
+        setMobileMenuOpen(false) // Close bottom menu if scrolled back to top
+      }
+    }
+
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
 
   // Handle clicking outside the user dropdown
   useEffect(() => {
@@ -84,17 +100,26 @@ export default function Header() {
 
   return (
     <>
-      {/* Enhanced Glassmorphism Header */}
-      <header className="sticky top-0 z-40 bg-white/30 backdrop-blur-xl border-b border-white/50 shadow-[0_4px_30px_rgba(0,0,0,0.03)] transition-all duration-300">
+      {/* --- 1. THE TOP HEADER (Scrolls away on Mobile, Sticky on Desktop) --- */}
+      <header
+        className={`top-0 left-0 w-full z-40 transition-all duration-500 ease-in-out absolute md:fixed ${
+          isScrolled
+            ? 'md:bg-white/90 md:backdrop-blur-xl md:shadow-[0_4px_20px_rgb(0,0,0,0.05)]'
+            : 'bg-transparent'
+        }`}>
         <div className="container mx-auto px-6 md:px-12">
-          <div className="flex items-center justify-between h-20 md:h-24">
-            {/* Mobile Menu Toggle */}
-            <button
-              onClick={() => setMobileMenuOpen(true)}
-              className="lg:hidden text-[#0f172a] p-1 -ml-1 hover:opacity-70 transition-opacity"
-              aria-label="Ouvrir le menu">
-              <Menu size={24} strokeWidth={1.2} />
-            </button>
+          {/* Height remains 20 on mobile. On desktop, it shrinks from 24 to 16 when scrolled */}
+          <div
+            className={`flex items-center justify-between transition-all duration-500 h-20 ${isScrolled ? 'md:h-16' : 'md:h-24'}`}>
+            {/* Mobile Menu Button (Left) */}
+            <div className="flex flex-1 lg:hidden items-center">
+              <button
+                onClick={() => setMobileMenuOpen(true)}
+                className="hover:opacity-60 transition-opacity p-2 -ml-2 text-[#0f172a]"
+                aria-label="Menu Mobile">
+                <Menu size={24} strokeWidth={1.2} />
+              </button>
+            </div>
 
             {/* Desktop Navigation (Left) */}
             <nav className="hidden lg:flex flex-1 items-center gap-8">
@@ -151,7 +176,7 @@ export default function Header() {
                     <User size={20} strokeWidth={1.2} />
                   </button>
                   {userMenuOpen && (
-                    <div className="absolute right-0 mt-6 w-56 bg-white/60 backdrop-blur-xl border border-white/50 py-3 shadow-[0_8px_32px_rgba(0,0,0,0.08)] rounded-sm animate-in fade-in slide-in-from-top-2">
+                    <div className="absolute right-0 mt-6 w-56 bg-white/90 backdrop-blur-xl border border-white/50 py-3 shadow-[0_8px_32px_rgba(0,0,0,0.08)] rounded-sm animate-in fade-in slide-in-from-top-2">
                       <Link
                         to="/account"
                         onClick={() => setUserMenuOpen(false)}
@@ -225,104 +250,147 @@ export default function Header() {
         </div>
       </header>
 
-      {/* --- MOBILE FULL-SCREEN MENU --- */}
-      {mobileMenuOpen && (
-        <div className="fixed inset-0 z-50 bg-white/70 backdrop-blur-2xl flex flex-col lg:hidden animate-in slide-in-from-left-full duration-300">
-          {/* Mobile Menu Header */}
-          <div className="flex items-center justify-between h-20 px-6 border-b border-black/5 shrink-0">
-            <Link to="/" onClick={() => setMobileMenuOpen(false)} className="flex items-center">
-              <img src="/pn.png" alt="Optic Modern" className="h-8 w-auto object-contain" />
-            </Link>
-            <button
-              onClick={() => setMobileMenuOpen(false)}
-              className="p-2 -mr-2 text-[#0f172a] hover:opacity-60 transition-opacity"
-              aria-label="Fermer le menu">
-              <X size={28} strokeWidth={1.2} />
-            </button>
+      {/* --- 2. THE COMPACT BOTTOM PILL (Hidden on Desktop) --- */}
+      <div
+        className={`fixed bottom-6 left-1/2 -translate-x-1/2 z-[60] md:hidden transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] font-sans ${
+          isScrolled && !mobileMenuOpen
+            ? 'translate-y-0 opacity-100 scale-100 pointer-events-auto'
+            : 'translate-y-24 opacity-0 scale-95 pointer-events-none'
+        }`}>
+        <div className="bg-white/80 backdrop-blur-xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-slate-200/60 rounded-full px-6 py-3 flex items-center gap-5">
+          <button
+            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+            className="flex items-center justify-center outline-none mr-1 hover:opacity-80 transition-opacity">
+            <img src="/pn.png" alt="Optic Modern" className="h-5 w-auto object-contain" />
+          </button>
+
+          <div className="w-px h-5 bg-slate-300/60"></div>
+
+          <button
+            onClick={() => setMobileMenuOpen(true)}
+            className="flex items-center gap-2 text-[11px] font-bold tracking-[0.1em] text-slate-800 uppercase hover:opacity-60 transition-opacity">
+            <Menu size={16} /> Menu
+          </button>
+
+          <div className="w-px h-5 bg-slate-300/60"></div>
+
+          <button
+            onClick={() => setIsOpen(true)}
+            className="relative text-slate-800 hover:opacity-60 transition-opacity pl-1">
+            <ShoppingBag size={18} strokeWidth={1.5} />
+            {itemCount > 0 && (
+              <span className="absolute -top-1.5 -right-2 w-3.5 h-3.5 bg-[#0f172a] text-white text-[8px] font-bold flex items-center justify-center rounded-full">
+                {itemCount}
+              </span>
+            )}
+          </button>
+        </div>
+      </div>
+
+      {/* --- 3. THE EXPANDED BOTTOM MENU (Hidden on Desktop) --- */}
+      <div
+        onClick={() => setMobileMenuOpen(false)}
+        className={`fixed inset-0 z-[65] md:hidden bg-slate-900/5 backdrop-blur-[2px] transition-opacity duration-300 ${
+          mobileMenuOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
+        }`}
+      />
+
+      <div
+        className={`fixed bottom-6 left-1/2 -translate-x-1/2 z-[70] w-[calc(100%-3rem)] max-w-md md:hidden transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] origin-bottom font-sans ${
+          mobileMenuOpen
+            ? 'translate-y-0 opacity-100 scale-100 pointer-events-auto'
+            : 'translate-y-20 opacity-0 scale-95 pointer-events-none'
+        }`}>
+        <div className="bg-white/95 backdrop-blur-2xl shadow-[0_20px_40px_rgb(0,0,0,0.15)] border border-slate-200/60 rounded-[32px] p-8 flex flex-col relative overflow-hidden max-h-[80vh] overflow-y-auto">
+          <button
+            onClick={() => setMobileMenuOpen(false)}
+            className="absolute top-5 right-5 p-2 bg-slate-100/80 rounded-full text-slate-500 hover:bg-slate-200 hover:text-black transition-colors z-10">
+            <X size={16} strokeWidth={2} />
+          </button>
+
+          <div className="flex flex-col items-center gap-2 mb-6">
+            <img src="/pn.png" alt="Optic Modern" className="h-8 w-auto object-contain" />
           </div>
 
-          {/* Mobile Menu Content */}
-          <div className="flex-1 overflow-y-auto p-8 flex flex-col">
-            {/* Mobile Search */}
-            <form onSubmit={handleSearch} className="mb-12 relative">
-              <input
-                type="text"
-                placeholder="Rechercher..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full bg-transparent border-b border-black/20 py-4 pl-10 pr-4 text-xs tracking-widest uppercase font-sans text-[#0f172a] placeholder:text-[#94a3b8] focus:outline-none focus:border-[#0f172a] transition-colors"
-              />
-              <Search
-                size={18}
-                strokeWidth={1.2}
-                className="absolute left-0 top-1/2 -translate-y-1/2 text-[#0f172a]"
-              />
-            </form>
+          {/* Inside Menu Search */}
+          <form onSubmit={handleSearch} className="mb-8 relative">
+            <input
+              type="text"
+              placeholder="Rechercher..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full bg-transparent border-b border-black/20 py-3 pl-8 pr-4 text-xs tracking-widest uppercase font-sans text-[#0f172a] placeholder:text-[#94a3b8] focus:outline-none focus:border-[#0f172a] transition-colors"
+            />
+            <Search
+              size={16}
+              strokeWidth={1.2}
+              className="absolute left-0 top-1/2 -translate-y-1/2 text-[#0f172a]"
+            />
+          </form>
 
-            {/* Main Categories & Links */}
-            <nav className="flex flex-col space-y-8 mb-auto">
-              {categories.map((category) => (
+          {/* Main Categories mapped dynamically */}
+          <nav className="flex flex-col items-center space-y-5 mb-8">
+            {categories.map((category) => (
+              <Link
+                key={category.id}
+                to={`/products?category=${category.slug}`}
+                onClick={() => setMobileMenuOpen(false)}
+                className="font-serif text-2xl text-[#0f172a] hover:text-[#334155] transition-colors">
+                {category.name}
+              </Link>
+            ))}
+
+            <div className="w-12 h-px bg-black/10 my-2" />
+
+            <Link
+              to="/highlights"
+              onClick={() => setMobileMenuOpen(false)}
+              className="font-serif text-2xl text-[#0f172a] hover:text-[#334155] transition-colors">
+              Tendances
+            </Link>
+            <Link
+              to="/about"
+              onClick={() => setMobileMenuOpen(false)}
+              className="font-serif text-2xl text-[#0f172a] hover:text-[#334155] transition-colors">
+              À Propos
+            </Link>
+          </nav>
+
+          {/* Account Actions */}
+          <div className="pt-6 border-t border-slate-200/60 flex flex-col items-center gap-4">
+            {user ? (
+              <>
                 <Link
-                  key={category.id}
-                  to={`/products?category=${category.slug}`}
+                  to="/account"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="font-serif text-3xl md:text-4xl text-[#0f172a] hover:text-[#334155] transition-colors">
-                  {category.name}
+                  className="flex items-center gap-3 text-[10px] font-sans tracking-[0.2em] uppercase text-[#334155] hover:text-[#0f172a]">
+                  <User size={16} strokeWidth={1.2} /> Mon Compte
                 </Link>
-              ))}
-
-              <div className="w-8 h-px bg-black/10 my-4" />
-
-              <Link
-                to="/highlights"
-                onClick={() => setMobileMenuOpen(false)}
-                className="font-serif text-3xl md:text-4xl text-[#0f172a] hover:text-[#334155] transition-colors">
-                Tendances
-              </Link>
-              <Link
-                to="/about"
-                onClick={() => setMobileMenuOpen(false)}
-                className="font-serif text-3xl md:text-4xl text-[#0f172a] hover:text-[#334155] transition-colors">
-                À Propos
-              </Link>
-            </nav>
-
-            {/* Account & Footer Links */}
-            <div className="pt-12 mt-12 space-y-6">
-              {user ? (
-                <>
+                {isAdmin && (
                   <Link
-                    to="/account"
+                    to="/admin"
                     onClick={() => setMobileMenuOpen(false)}
-                    className="flex items-center gap-4 text-[11px] font-sans tracking-[0.2em] uppercase text-[#334155]">
-                    <User size={18} strokeWidth={1.2} /> Mon Compte
+                    className="flex items-center gap-3 text-[10px] font-sans tracking-[0.2em] uppercase text-[#334155] hover:text-[#0f172a]">
+                    Tableau de Bord
                   </Link>
-                  {isAdmin && (
-                    <Link
-                      to="/admin"
-                      onClick={() => setMobileMenuOpen(false)}
-                      className="flex items-center gap-4 text-[11px] font-sans tracking-[0.2em] uppercase text-[#334155]">
-                      Tableau de Bord
-                    </Link>
-                  )}
-                  <button
-                    onClick={handleSignOut}
-                    className="text-[11px] font-sans tracking-[0.2em] uppercase text-red-600 text-left w-full mt-4">
-                    Déconnexion
-                  </button>
-                </>
-              ) : (
-                <Link
-                  to="/auth"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="flex items-center gap-4 text-[11px] font-sans tracking-[0.2em] uppercase text-[#334155]">
-                  <User size={18} strokeWidth={1.2} /> Connexion / Inscription
-                </Link>
-              )}
-            </div>
+                )}
+                <button
+                  onClick={handleSignOut}
+                  className="text-[10px] font-sans tracking-[0.2em] uppercase text-red-600 mt-2">
+                  Déconnexion
+                </button>
+              </>
+            ) : (
+              <Link
+                to="/auth"
+                onClick={() => setMobileMenuOpen(false)}
+                className="flex items-center gap-3 text-[10px] font-sans tracking-[0.2em] uppercase text-[#334155] hover:text-[#0f172a]">
+                <User size={16} strokeWidth={1.2} /> Connexion / Inscription
+              </Link>
+            )}
           </div>
         </div>
-      )}
+      </div>
     </>
   )
 }

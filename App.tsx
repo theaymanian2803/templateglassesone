@@ -7,7 +7,8 @@ import { TooltipProvider } from '@/components/ui/tooltip'
 import { AuthProvider } from '@/contexts/AuthContext'
 import { CartProvider } from '@/contexts/CartContext'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import { useEffect } from 'react'
+import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom'
 import AboutUs from './src/pages/AboutUs'
 import Account from './src/pages/Account'
 import Admin from './src/pages/Admin'
@@ -23,6 +24,64 @@ import NotFound from './src/pages/NotFound'
 import ProductDetail from './src/pages/ProductDetail'
 import Products from './src/pages/Products'
 
+// Component that forces the window to the top on every route change
+function ScrollToTop() {
+  const { pathname } = useLocation()
+
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [pathname])
+
+  return null
+}
+function ThemeInitializer() {
+  useEffect(() => {
+    // Hex to HSL Helper function
+    const hexToHSL = (hex: string) => {
+      let r = 0,
+        g = 0,
+        b = 0
+      if (hex.length === 4) {
+        r = parseInt('0x' + hex[1] + hex[1])
+        g = parseInt('0x' + hex[2] + hex[2])
+        b = parseInt('0x' + hex[3] + hex[3])
+      } else if (hex.length === 7) {
+        r = parseInt('0x' + hex[1] + hex[2])
+        g = parseInt('0x' + hex[3] + hex[4])
+        b = parseInt('0x' + hex[5] + hex[6])
+      }
+      r /= 255
+      g /= 255
+      b /= 255
+      const cmax = Math.max(r, g, b),
+        cmin = Math.min(r, g, b),
+        delta = cmax - cmin
+      let h = 0,
+        s = 0,
+        l = 0
+      if (delta === 0) h = 0
+      else if (cmax === r) h = ((g - b) / delta) % 6
+      else if (cmax === g) h = (b - r) / delta + 2
+      else h = (r - g) / delta + 4
+      h = Math.round(h * 60)
+      if (h < 0) h += 360
+      l = (cmax + cmin) / 2
+      s = delta === 0 ? 0 : delta / (1 - Math.abs(2 * l - 1))
+      return `${Math.round(h)} ${Math.round(s * 100)}% ${Math.round(l * 100)}%`
+    }
+
+    const savedTheme = localStorage.getItem('site_theme')
+    if (savedTheme) {
+      const colors = JSON.parse(savedTheme)
+      Object.entries(colors).forEach(([key, hex]) => {
+        document.documentElement.style.setProperty(key, hexToHSL(hex as string))
+      })
+    }
+  }, [])
+
+  return null
+}
+
 const queryClient = new QueryClient()
 
 const App = () => (
@@ -33,7 +92,11 @@ const App = () => (
           <Toaster />
           <Sonner />
           <BrowserRouter>
+            {/* Placed immediately inside BrowserRouter to listen to route changes */}
+            <ScrollToTop />
+            <ThemeInitializer />
             <Header />
+
             <MiniCart />
             <Routes>
               <Route path="/" element={<Index />} />

@@ -52,7 +52,11 @@ export default function Account() {
   }
 
   if (authLoading)
-    return <div className="py-20 text-center text-sm text-muted-foreground">Loading account...</div>
+    return (
+      <div className="py-32 text-center text-sm font-sans tracking-widest uppercase text-slate-500">
+        Loading account...
+      </div>
+    )
   if (!user) return <Navigate to="/auth" />
 
   // Extract Google Auth metadata (or fallback)
@@ -63,43 +67,46 @@ export default function Account() {
   const getStatusColor = (status: string) => {
     switch (status.toLowerCase()) {
       case 'delivered':
-        return 'bg-green-100 text-green-800 border-green-200'
+        return 'bg-emerald-50 text-emerald-700 border-emerald-100'
       case 'shipped':
-        return 'bg-blue-100 text-blue-800 border-blue-200'
+        return 'bg-blue-50 text-blue-700 border-blue-100'
       case 'cancelled':
-        return 'bg-red-100 text-red-800 border-red-200'
+        return 'bg-red-50 text-red-700 border-red-100'
       default:
-        return 'bg-muted text-muted-foreground border-border'
+        return 'bg-slate-100 text-slate-600 border-slate-200'
     }
   }
 
   return (
-    <main className="container mx-auto px-4 md:px-8 py-12 max-w-5xl">
-      <h1 className="font-serif text-2xl md:text-3xl mb-8">My Account</h1>
+    // Added pt-32 md:pt-40 to push content below the absolute header
+    <main className="container mx-auto px-6 md:px-12 pt-32 pb-24 md:pt-40 max-w-6xl min-h-screen font-sans">
+      <h1 className="font-serif text-3xl md:text-5xl mb-12 text-slate-900 tracking-tight">
+        My Account
+      </h1>
 
       <div className="grid grid-cols-1 md:grid-cols-4 gap-8 lg:gap-12">
         {/* --- SIDEBAR: Profile Info --- */}
-        <div className="md:col-span-1 space-y-6">
-          <div className="border border-border p-6 text-center">
+        <div className="md:col-span-1 space-y-4">
+          <div className="bg-white/60 backdrop-blur-md border border-slate-200/60 rounded-[24px] p-8 text-center shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
             {avatarUrl ? (
               <img
                 src={avatarUrl}
                 alt={fullName}
-                className="w-20 h-20 rounded-full mx-auto mb-4 object-cover border border-border"
+                className="w-24 h-24 rounded-full mx-auto mb-5 object-cover border-2 border-white shadow-sm"
               />
             ) : (
-              <div className="w-20 h-20 rounded-full bg-muted flex items-center justify-center mx-auto mb-4">
-                <UserIcon size={32} className="text-muted-foreground" />
+              <div className="w-24 h-24 rounded-full bg-slate-100 flex items-center justify-center mx-auto mb-5 border-2 border-white shadow-sm">
+                <UserIcon size={36} className="text-slate-400" />
               </div>
             )}
-            <h2 className="font-serif text-lg truncate">{fullName}</h2>
-            <p className="text-xs text-muted-foreground truncate">{email}</p>
+            <h2 className="font-serif text-xl text-slate-900 mb-1 truncate">{fullName}</h2>
+            <p className="text-xs text-slate-500 truncate">{email}</p>
           </div>
 
           <div className="flex flex-col gap-2">
             <button
               onClick={handleSignOut}
-              className="flex items-center justify-between p-4 border border-border hover:bg-muted/30 transition-colors text-sm font-medium text-destructive">
+              className="w-full flex items-center justify-between p-5 bg-white/60 backdrop-blur-md border border-slate-200/60 rounded-[16px] hover:bg-red-50 hover:border-red-100 hover:text-red-600 transition-colors text-sm font-medium text-slate-600 shadow-[0_4px_20px_rgb(0,0,0,0.02)]">
               Sign Out
               <LogOut size={16} />
             </button>
@@ -108,17 +115,21 @@ export default function Account() {
 
         {/* --- MAIN CONTENT: Order History --- */}
         <div className="md:col-span-3">
-          <h2 className="font-serif text-xl mb-6 flex items-center gap-2 border-b border-border pb-4">
-            <Package size={20} /> Order History
+          <h2 className="font-serif text-2xl mb-8 flex items-center gap-3 text-slate-900">
+            <Package size={24} className="text-[#f472b6]" /> Order History
           </h2>
 
           {ordersLoading ? (
-            <p className="text-sm text-muted-foreground py-8">Loading your orders...</p>
+            <p className="text-sm text-slate-500 py-8 tracking-widest uppercase">
+              Loading your orders...
+            </p>
           ) : orders.length === 0 ? (
-            <div className="text-center py-12 border border-border bg-muted/10">
-              <Package size={40} className="mx-auto text-muted-foreground mb-4" />
-              <p className="text-sm font-sans mb-4">You haven't placed any orders yet.</p>
-              <Link to="/products" className="btn-luxury inline-block text-xs py-2 px-6">
+            <div className="text-center py-16 bg-white/40 backdrop-blur-sm border border-slate-200/60 rounded-[24px]">
+              <Package size={48} className="mx-auto text-slate-300 mb-5" strokeWidth={1} />
+              <p className="text-slate-600 mb-6">You haven't placed any orders yet.</p>
+              <Link
+                to="/products"
+                className="inline-block px-8 py-3 bg-[#111827] text-white rounded-full text-xs font-bold tracking-widest uppercase hover:bg-black transition-colors">
                 Start Shopping
               </Link>
             </div>
@@ -127,14 +138,14 @@ export default function Account() {
               {orders.map((order: any) => (
                 <div
                   key={order.id}
-                  className="border border-border p-5 md:p-6 hover:border-foreground/20 transition-colors">
+                  className="bg-white/60 backdrop-blur-md border border-slate-200/60 rounded-[24px] p-6 md:p-8 shadow-[0_4px_20px_rgb(0,0,0,0.02)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.06)] transition-all">
                   {/* Order Header */}
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-border pb-4 mb-4">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200/60 pb-5 mb-5">
                     <div>
-                      <p className="text-xs text-muted-foreground font-mono mb-1">
+                      <p className="text-[11px] text-slate-500 font-bold tracking-[0.15em] uppercase mb-1.5">
                         Order #{order.id.split('-')[0]}
                       </p>
-                      <p className="text-sm font-medium">
+                      <p className="text-sm text-slate-900 font-medium">
                         {new Date(order.created_at).toLocaleDateString('en-US', {
                           year: 'numeric',
                           month: 'long',
@@ -142,26 +153,27 @@ export default function Account() {
                         })}
                       </p>
                     </div>
-                    <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-5">
                       <span
-                        className={`px-3 py-1 rounded-full text-xs font-medium border ${getStatusColor(order.status)}`}>
+                        className={`px-3.5 py-1.5 rounded-full text-[10px] font-bold tracking-widest border ${getStatusColor(
+                          order.status
+                        )}`}>
                         {order.status.replace('_', ' ').toUpperCase()}
                       </span>
-                      <p className="font-serif text-lg">${order.total}</p>
+                      <p className="font-serif text-xl text-slate-900">${order.total}</p>
                     </div>
                   </div>
 
                   {/* Order Items */}
-                  <div className="space-y-4">
+                  <div className="space-y-5">
                     {order.order_items.map((item: any, idx: number) => {
                       const product = item.products
                       const productLink = `/product/${product?.id}`
-                      // Safely grab the first image from the array using the exact column name
                       const firstImage = product?.image_urls?.[0]
 
                       return (
-                        <div key={idx} className="flex items-center gap-4">
-                          <div className="w-16 h-16 bg-muted border border-border/50 overflow-hidden flex-shrink-0">
+                        <div key={idx} className="flex items-center gap-5">
+                          <div className="w-20 h-20 bg-slate-50 border border-slate-100 rounded-2xl overflow-hidden flex-shrink-0">
                             {firstImage ? (
                               <img
                                 src={firstImage}
@@ -170,7 +182,7 @@ export default function Account() {
                               />
                             ) : (
                               <div className="w-full h-full flex items-center justify-center">
-                                <Package size={20} className="text-muted-foreground/50" />
+                                <Package size={24} className="text-slate-300" strokeWidth={1} />
                               </div>
                             )}
                           </div>
@@ -179,15 +191,15 @@ export default function Account() {
                             {product ? (
                               <Link
                                 to={productLink}
-                                className="text-sm font-medium hover:underline truncate block">
+                                className="text-base font-medium text-slate-900 hover:text-[#f472b6] transition-colors truncate block">
                                 {product.name}
                               </Link>
                             ) : (
-                              <p className="text-sm font-medium text-muted-foreground truncate">
+                              <p className="text-base font-medium text-slate-400 truncate">
                                 Product no longer available
                               </p>
                             )}
-                            <p className="text-xs text-muted-foreground mt-1">
+                            <p className="text-sm text-slate-500 mt-1">
                               Qty: {item.quantity} × ${item.price}
                             </p>
                           </div>
@@ -195,9 +207,9 @@ export default function Account() {
                           {product && (
                             <Link
                               to={productLink}
-                              className="p-2 text-muted-foreground hover:text-foreground transition-colors flex-shrink-0"
+                              className="p-3 text-slate-400 hover:text-slate-900 bg-slate-50 hover:bg-slate-100 rounded-full transition-colors flex-shrink-0"
                               title="View Product">
-                              <ExternalLink size={16} />
+                              <ExternalLink size={18} strokeWidth={1.5} />
                             </Link>
                           )}
                         </div>

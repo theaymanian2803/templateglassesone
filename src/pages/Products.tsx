@@ -149,8 +149,8 @@ export default function Products() {
     onChange: (v: string) => void
     getDisplayValue?: (val: string) => string
   }) => (
-    <div>
-      <p className="text-xs font-sans tracking-widest uppercase text-muted-foreground mb-3">
+    <div className="mb-8">
+      <p className="text-[10px] font-sans font-bold tracking-[0.2em] uppercase text-[#1a2b3c]/50 mb-3">
         {label}
       </p>
       <div className="flex flex-wrap gap-2">
@@ -158,7 +158,11 @@ export default function Products() {
           <button
             key={opt}
             onClick={() => onChange(opt)}
-            className={`px-3 py-1.5 text-xs font-sans capitalize transition-all border ${value === opt ? 'bg-primary text-primary-foreground border-primary' : 'bg-transparent text-foreground border-border hover:border-foreground'}`}>
+            className={`px-4 py-2 text-xs font-sans font-medium capitalize transition-all rounded-full border ${
+              value === opt
+                ? 'bg-[#1a2b3c] text-white border-[#1a2b3c] shadow-sm'
+                : 'bg-white/60 text-[#1a2b3c] border-[#1a2b3c]/15 hover:bg-white hover:border-[#1a2b3c]/30'
+            }`}>
             {getDisplayValue ? getDisplayValue(opt) : opt === 'bluelight' ? 'Blue Light' : opt}
           </button>
         ))}
@@ -167,77 +171,31 @@ export default function Products() {
   )
 
   return (
-    <main className="container mx-auto px-4 md:px-8 py-12">
-      <div className="flex items-center justify-between mb-8">
-        <div>
-          <h1 className="section-heading text-2xl md:text-3xl">
-            {searchQuery ? `Results for "${searchQuery}"` : 'All Frames'}
-          </h1>
-          <p className="text-sm font-sans text-muted-foreground mt-1">{filtered.length} styles</p>
+    <main className="w-full  min-h-screen bg-background text-[#1a2b3c] font-sans pb-24 selection:bg-[#1a2b3c] selection:text-white mt-12">
+      <div className="container mx-auto px-4 md:px-8 py-12 lg:py-20 max-w-7xl">
+        {/* Header Section */}
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12 border-b border-[#1a2b3c]/10 pb-8">
+          <div>
+            <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl text-[#1a2b3c] leading-[1.1] tracking-tight">
+              {searchQuery ? `Results for "${searchQuery}"` : 'All Frames'}
+            </h1>
+            <p className="text-base font-sans text-[#1a2b3c]/60 mt-4 font-light">
+              Explore our curated selection of {filtered.length} styles.
+            </p>
+          </div>
+
+          {/* Mobile Filter Toggle */}
+          <button
+            onClick={() => setFiltersOpen(true)}
+            className="flex items-center justify-center gap-2 px-6 py-3 bg-white border border-[#1a2b3c]/15 rounded-full text-xs font-sans tracking-widest uppercase text-[#1a2b3c] hover:border-[#1a2b3c]/30 hover:bg-[#f8f9fa] transition-all shadow-sm md:hidden">
+            <SlidersHorizontal size={16} /> Customize Filters
+          </button>
         </div>
-        <button
-          onClick={() => setFiltersOpen(!filtersOpen)}
-          className="flex items-center gap-2 text-xs font-sans tracking-widest uppercase text-muted-foreground hover:text-foreground transition-colors md:hidden">
-          <SlidersHorizontal size={16} /> Filters
-        </button>
-      </div>
 
-      <div className="flex gap-12">
-        <aside className="hidden md:block w-56 shrink-0 space-y-8">
-          {dynamicCategories.length > 1 && (
-            <FilterChips
-              label="Category"
-              options={dynamicCategories}
-              value={category}
-              onChange={setCategory}
-              getDisplayValue={getCategoryDisplayName}
-            />
-          )}
-          {dynamicBrands.length > 1 && (
-            <FilterChips
-              label="Brand"
-              options={dynamicBrands}
-              value={brand}
-              onChange={setBrand}
-              getDisplayValue={getBrandDisplayName}
-            />
-          )}
-          {dynamicShapes.length > 1 && (
-            <FilterChips
-              label="Frame Shape"
-              options={dynamicShapes}
-              value={shape}
-              onChange={setShape}
-              getDisplayValue={getShapeDisplayName}
-            />
-          )}
-          {dynamicMaterials.length > 1 && (
-            <FilterChips
-              label="Material"
-              options={dynamicMaterials}
-              value={material}
-              onChange={setMaterial}
-              getDisplayValue={getMaterialDisplayName}
-            />
-          )}
-          {hasFilters && (
-            <button
-              onClick={clearFilters}
-              className="text-xs font-sans text-muted-foreground hover:text-foreground flex items-center gap-1">
-              <X size={12} /> Clear filters
-            </button>
-          )}
-        </aside>
-
-        {filtersOpen && (
-          <div className="fixed inset-0 z-40 bg-background p-6 overflow-y-auto md:hidden animate-fade-up">
-            <div className="flex justify-between items-center mb-8">
-              <h2 className="font-serif text-lg">Filters</h2>
-              <button onClick={() => setFiltersOpen(false)}>
-                <X size={20} />
-              </button>
-            </div>
-            <div className="space-y-8">
+        <div className="flex flex-col md:flex-row gap-12 lg:gap-16">
+          {/* Desktop Sidebar */}
+          <aside className="hidden md:block w-64 shrink-0">
+            <div className="sticky top-24">
               {dynamicCategories.length > 1 && (
                 <FilterChips
                   label="Category"
@@ -274,29 +232,122 @@ export default function Products() {
                   getDisplayValue={getMaterialDisplayName}
                 />
               )}
-            </div>
-            <button onClick={() => setFiltersOpen(false)} className="btn-luxury w-full mt-8">
-              Show {filtered.length} results
-            </button>
-          </div>
-        )}
 
-        <div className="flex-1">
-          {isLoading ? (
-            <p className="text-sm font-sans text-muted-foreground text-center py-16">
-              Loading products...
-            </p>
-          ) : filtered.length === 0 ? (
-            <p className="text-sm font-sans text-muted-foreground text-center py-16">
-              No frames found. Try adjusting your filters.
-            </p>
-          ) : (
-            <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
-              {filtered.map((product) => (
-                <ProductCard key={product.id} product={product as Product} />
-              ))}
+              {hasFilters && (
+                <button
+                  onClick={clearFilters}
+                  className="mt-4 px-4 py-2 text-xs font-sans font-semibold tracking-widest uppercase text-[#1a2b3c]/60 hover:text-[#1a2b3c] flex items-center gap-2 transition-colors border border-transparent hover:border-[#1a2b3c]/10 rounded-full">
+                  <X size={14} /> Clear filters
+                </button>
+              )}
+            </div>
+          </aside>
+
+          {/* Mobile Filters Modal */}
+          {filtersOpen && (
+            <div className="fixed inset-0 z-50 bg-[#dbeebcef] p-6 overflow-y-auto md:hidden animate-in slide-in-from-bottom-full duration-300">
+              <div
+                className="bg-white min-h-full p-6 relative border border-[#1a2b3c]/10 shadow-xl"
+                style={{
+                  clipPath:
+                    'polygon(20px 0%, 100% 0%, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0% 100%, 0% 20px)',
+                }}>
+                <div className="flex justify-between items-center mb-10 pb-4 border-b border-[#1a2b3c]/10">
+                  <h2 className="font-serif text-2xl text-[#1a2b3c]">Filters</h2>
+                  <button
+                    onClick={() => setFiltersOpen(false)}
+                    className="w-10 h-10 rounded-full border border-[#1a2b3c]/10 flex items-center justify-center text-[#1a2b3c] hover:bg-[#1a2b3c] hover:text-white transition-colors">
+                    <X size={20} />
+                  </button>
+                </div>
+
+                <div className="space-y-4">
+                  {dynamicCategories.length > 1 && (
+                    <FilterChips
+                      label="Category"
+                      options={dynamicCategories}
+                      value={category}
+                      onChange={setCategory}
+                      getDisplayValue={getCategoryDisplayName}
+                    />
+                  )}
+                  {dynamicBrands.length > 1 && (
+                    <FilterChips
+                      label="Brand"
+                      options={dynamicBrands}
+                      value={brand}
+                      onChange={setBrand}
+                      getDisplayValue={getBrandDisplayName}
+                    />
+                  )}
+                  {dynamicShapes.length > 1 && (
+                    <FilterChips
+                      label="Frame Shape"
+                      options={dynamicShapes}
+                      value={shape}
+                      onChange={setShape}
+                      getDisplayValue={getShapeDisplayName}
+                    />
+                  )}
+                  {dynamicMaterials.length > 1 && (
+                    <FilterChips
+                      label="Material"
+                      options={dynamicMaterials}
+                      value={material}
+                      onChange={setMaterial}
+                      getDisplayValue={getMaterialDisplayName}
+                    />
+                  )}
+                </div>
+
+                <div className="mt-12 space-y-3">
+                  <button
+                    onClick={() => setFiltersOpen(false)}
+                    className="w-full bg-[#1a2b3c] text-white py-4 rounded-full text-sm font-sans font-semibold tracking-widest uppercase hover:bg-[#2a3b4c] transition-all">
+                    Show {filtered.length} results
+                  </button>
+                  {hasFilters && (
+                    <button
+                      onClick={clearFilters}
+                      className="w-full bg-white text-[#1a2b3c] border border-[#1a2b3c]/20 py-4 rounded-full text-sm font-sans font-semibold tracking-widest uppercase hover:bg-[#f8f9fa] transition-all">
+                      Clear All
+                    </button>
+                  )}
+                </div>
+              </div>
             </div>
           )}
+
+          {/* Product Grid */}
+          <div className="flex-1">
+            {isLoading ? (
+              <div className="w-full h-64 flex flex-col items-center justify-center">
+                <p className="text-sm font-sans tracking-widest uppercase text-[#1a2b3c]/50">
+                  Curating styles...
+                </p>
+              </div>
+            ) : filtered.length === 0 ? (
+              <div className="w-full h-64 flex flex-col items-center justify-center border border-dashed border-[#1a2b3c]/20 bg-white/30 p-8 text-center">
+                <p className="text-lg font-serif text-[#1a2b3c] mb-2">No frames found.</p>
+                <p className="text-sm font-sans text-[#1a2b3c]/60 font-light">
+                  Try adjusting your filters or search query to find the perfect pair.
+                </p>
+                {hasFilters && (
+                  <button
+                    onClick={clearFilters}
+                    className="mt-6 px-6 py-2.5 bg-white border border-[#1a2b3c]/15 rounded-full text-xs font-sans tracking-widest uppercase text-[#1a2b3c] hover:border-[#1a2b3c]/30 hover:bg-[#f8f9fa] transition-all shadow-sm">
+                    Clear Filters
+                  </button>
+                )}
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+                {filtered.map((product) => (
+                  <ProductCard key={product.id} product={product as Product} />
+                ))}
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </main>

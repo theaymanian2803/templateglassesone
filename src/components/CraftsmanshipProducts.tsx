@@ -1,11 +1,11 @@
+import { Button } from '@/components/ui/button'
 import { supabase } from '@/integrations/supabase/client'
 import { useQuery } from '@tanstack/react-query'
 import { motion } from 'framer-motion'
-import { Plus } from 'lucide-react'
+import { ChevronRight, ShoppingBag } from 'lucide-react'
 import { Link } from 'react-router-dom'
 
-// --- 1. Product Type Definition from your Schema ---
-// Defined based on your SQL schema, representing the fields we are selecting
+// --- 1. Product Type Definition ---
 interface Product {
   id: string
   name: string
@@ -15,72 +15,78 @@ interface Product {
 }
 
 // --- 2. Framer Motion Animation Variants ---
+// Updated for horizontal stagger
 const containerVariants = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.1, // Stagger animations for a domino effect
+      staggerChildren: 0.15,
     },
   },
 }
 
 const itemVariants = {
-  hidden: { opacity: 0, y: 30 }, // Start off-screen and invisible
+  hidden: { opacity: 0, x: 50 },
   visible: {
     opacity: 1,
-    y: 0,
+    x: 0,
     transition: {
       type: 'spring',
-      stiffness: 70,
-      damping: 15,
+      stiffness: 80,
+      damping: 18,
     },
   },
 }
 
+// --- Filter Data ---
+const filters = ['Retro Revival', 'Classic', 'Blue Light', 'Sunglass']
+
 export default function CraftsmanshipProducts() {
-  // --- 3. Data Fetching with React Query & Supabase ---
+  // --- 3. Data Fetching ---
   const {
     data: products = [],
     isLoading,
     isError,
   } = useQuery({
-    queryKey: ['craftsmanship-products'],
-    // Explicitly define the return type of the query function to fix the 'any' error
+    queryKey: ['best-selling-products'],
     queryFn: async (): Promise<Product[]> => {
       const { data, error } = await supabase
         .from('products')
         .select('id, name, price, description, image_urls')
-        .order('created_at', { ascending: false }) // Show newest first
-        .limit(8) // Restricted to 8 products as requested
+        .order('created_at', { ascending: false })
+        .limit(8)
 
       if (error) {
         console.error('Error fetching craftsmanship products:', error)
         throw error
       }
 
-      // Cast the returned data to match our Product interface
       return data as Product[]
     },
-    staleTime: 5 * 60 * 1000, // Consider data fresh for 5 minutes
+    staleTime: 5 * 60 * 1000,
   })
 
-  // --- 4. Render States for Loading and Error ---
+  // --- 4. Render States ---
   if (isLoading) {
     return (
-      <div className="container mx-auto px-4 py-20 text-center">
-        <h2 className="font-serif text-3xl mb-12 tracking-tight">Our Craftsmanship</h2>
-        <p className="text-sm font-sans text-muted-foreground">Loading our latest pieces...</p>
+      <div className="bg-[#f0f3f8] min-h-[60vh] flex flex-col items-center justify-center text-center px-4 py-20">
+        <h2 className="font-serif text-4xl mb-6 tracking-tight text-foreground/90">
+          Loading Best Sellers...
+        </h2>
+        <p className="text-sm font-sans text-muted-foreground">Finding our latest pieces...</p>
       </div>
     )
   }
 
   if (isError) {
     return (
-      <div className="container mx-auto px-4 py-20 text-center">
-        <h2 className="font-serif text-3xl mb-12 tracking-tight">Our Craftsmanship</h2>
-        <p className="text-sm font-sans text-destructive">
-          Could not load products. Please try again.
+      <div className="bg-background min-h-[60vh] flex flex-col items-center justify-center text-center px-4 py-20">
+        <h2 className="font-serif text-4xl mb-6 tracking-tight text-destructive">
+          Error Loading Products
+        </h2>
+        <p className="text-sm font-sans text-destructive/80">
+          We couldn't load the best sellers. Please try refreshing the page.
         </p>
       </div>
     )
@@ -88,60 +94,112 @@ export default function CraftsmanshipProducts() {
 
   // --- 5. Main Component Render ---
   return (
-    <main className="w-full">
-      {/* --- A. Our Craftsmanship Text Section --- */}
+    <main className="w-full bg-background border-t border-border/50">
+      <div className="container mx-auto px-4 md:px-6 lg:px-10 py-16 lg:py-24 space-y-16">
+        {/* --- A. Header Section --- */}
+        <section className="grid md:grid-cols-[2fr,1fr] gap-x-12 gap-y-8 items-start">
+          <div className="space-y-6">
+            <h1 className="font-serif text-5xl md:text-6xl font-medium tracking-tighter leading-[0.95]">
+              Best - <br /> selling Glasses
+            </h1>
 
-      {/* --- B. Animated & Scrollable Products Section --- */}
-      <section className="bg-muted/10 border-t border-border">
-        {/*
-          Added standard CSS to hide scrollbars:
-          - [scrollbar-width:none] for Firefox
-          - [-ms-overflow-style:none] for IE/Edge
-          - [&::-webkit-scrollbar]:hidden for Chrome/Safari/Edge
-        */}
-        <div className="max-h-[80vh] overflow-y-auto w-full scroll-smooth snap-y mandatory [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+            {/* Filter Pills */}
+            <div className="flex flex-wrap gap-2 items-center pt-2">
+              <Button
+                size="icon"
+                variant="secondary"
+                className="rounded-full bg-[#19232c] text-white hover:bg-[#2a3b4c]">
+                <ChevronRight size={20} className="rotate-[-45deg]" />
+              </Button>
+              {filters.map((filter) => (
+                <Button
+                  key={filter}
+                  variant="outline"
+                  className="rounded-full border-[#1a2b3c]/20 hover:bg-[#1a2b3c]/5 px-5 font-sans text-sm font-medium">
+                  {filter}
+                </Button>
+              ))}
+            </div>
+          </div>
+
+          {/* Description Block */}
+          <div className="flex justify-end md:justify-start pt-2">
+            <p className="max-w-[30ch] text-base font-sans text-[#1a2b3c]/70 leading-relaxed">
+              A unique <strong className="font-semibold text-[#1a2b3c]">blend of elegance</strong>,
+              cutting-edge tech and affordability
+            </p>
+          </div>
+        </section>
+
+        {/* --- B. Animated & Scrollable Products Section --- */}
+        <section>
+          {/*
+            Standard CSS to hide scrollbars:
+            - [scrollbar-width:none] for Firefox
+            - [-ms-overflow-style:none] for IE/Edge
+            - [&::-webkit-scrollbar]:hidden for Chrome/Safari/Edge
+          */}
           <motion.div
-            className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 w-full"
+            className="flex overflow-x-auto gap-6 lg:gap-8 pb-10 scroll-smooth snap-x mandatory [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
             variants={containerVariants}
             initial="hidden"
-            whileInView="visible" // Animate when the grid enters the viewport
-            viewport={{ once: true, amount: 0.1 }} // Only animate once
-          >
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.1 }}>
             {products.map((product) => {
-              // --- Handle Multiple Images from your Schema ---
               const firstImage = product.image_urls?.[0] || '/images/product-placeholder.jpg'
               const productUrl = `/product/${product.id}`
 
               return (
                 <motion.div
                   key={product.id}
-                  className="group relative aspect-[3/4] border-r border-b border-border hover:z-10 transition-all snap-start"
+                  className="flex-none w-[300px] md:w-[350px] snap-center lg:snap-start group"
                   variants={itemVariants}>
-                  <Link to={productUrl} className="block w-full h-full p-4 lg:p-6 space-y-4">
-                    {/* Image Container with Hover Shift */}
-                    <div className="w-full aspect-square overflow-hidden bg-muted/20">
-                      <img
-                        src={firstImage}
-                        alt={product.name}
-                        className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-500 ease-in-out"
-                        loading="lazy"
-                      />
-                    </div>
+                  <Link to={productUrl} className="block w-full h-full space-y-4 cursor-pointer">
+                    {/* --- Product Card with Beveled Corners --- */}
+                    {/* Inline style for the custom polygon shape */}
+                    <div
+                      className="bg-white p-8 space-y-6 relative border border-border/50 transition-shadow hover:shadow-lg"
+                      style={{
+                        clipPath:
+                          'polygon(20px 0%, 100% 0%, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0% 100%, 0% 20px)',
+                      }}>
+                      {/* Product Content Container */}
+                      <div className="space-y-12">
+                        {/* 1. Subtle 'Style' placeholder text */}
+                        <div className="flex items-center justify-center gap-1.5 pt-1">
+                          <span className="w-4 h-[1px] bg-border"></span>
+                          <p className="font-sans text-xs font-medium text-muted-foreground tracking-tight">
+                            3x Style
+                          </p>
+                          <span className="w-4 h-[1px] bg-border"></span>
+                        </div>
 
-                    {/* Product Details */}
-                    <div className="flex flex-col gap-1 pb-10">
-                      <h3 className="font-sans text-xs md:text-sm font-medium truncate tracking-tight">
-                        {product.name}
-                      </h3>
-                      <p className="font-serif text-sm lg:text-base text-foreground/90">
-                        ${product.price.toFixed(2)}
-                      </p>
-                    </div>
+                        {/* 2. Main Product Image */}
+                        <div className="w-full aspect-[3/2] flex items-center justify-center overflow-hidden">
+                          <img
+                            src={firstImage}
+                            alt={product.name}
+                            className="w-auto h-full object-contain transition-transform duration-500 ease-in-out group-hover:scale-105"
+                            loading="lazy"
+                          />
+                        </div>
 
-                    {/* Subtle Luxury Hover Action */}
-                    <div className="absolute bottom-4 right-4 lg:bottom-6 lg:right-6 opacity-0 group-hover:opacity-100 transition-opacity">
-                      <div className="w-10 h-10 rounded-full border border-foreground/30 flex items-center justify-center hover:bg-foreground hover:text-background transition-colors">
-                        <Plus size={18} />
+                        {/* 3. Product Details */}
+                        <div className="flex flex-col gap-1.5 pb-2">
+                          <h3 className="font-sans text-lg font-semibold text-[#1a2b3c] truncate tracking-tight">
+                            {product.name}
+                          </h3>
+                          <p className="font-serif text-xl lg:text-2xl font-medium text-foreground/90">
+                            ${product.price.toFixed(0)}
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* --- Luxury Action Button --- */}
+                      <div className="absolute bottom-6 right-6">
+                        <div className="w-11 h-11 rounded-full border border-border bg-white flex items-center justify-center text-[#1a2b3c] transition-colors hover:bg-[#1a2b3c] hover:text-white hover:border-[#1a2b3c]">
+                          <ShoppingBag size={20} />
+                        </div>
                       </div>
                     </div>
                   </Link>
@@ -149,8 +207,8 @@ export default function CraftsmanshipProducts() {
               )
             })}
           </motion.div>
-        </div>
-      </section>
+        </section>
+      </div>
     </main>
   )
 }

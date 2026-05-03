@@ -4,14 +4,15 @@ import { Link } from 'react-router-dom'
 
 // EXTERNAL PLACEHOLDER IMAGES
 const modelImg =
-  'https://images.unsplash.com/photo-1539109136881-3be0616acf4b?q=80&w=800&auto=format&fit=crop'
+  'https://plus.unsplash.com/premium_photo-1692340973720-3e82f5dc22ea?q=80&w=1632&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
 const pedestalGlassesImg =
   'https://images.unsplash.com/photo-1511499767150-a48a237f0083?q=80&w=800&auto=format&fit=crop'
 const boxImg =
   'https://images.unsplash.com/photo-1574258495973-f010dfbb5371?q=80&w=800&auto=format&fit=crop'
 const avatarImg =
   'https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=100&auto=format&fit=crop'
-const trustImg = '/mahal.png' // Added placeholder for the trust section
+const trustImg =
+  'https://plus.unsplash.com/premium_photo-1693222144068-513f78a25a29?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D' // Added placeholder for the trust section
 
 import CraftsmanshipProducts from '@/components/CraftsmanshipProducts'
 import { useCart } from '@/contexts/CartContext'
@@ -20,10 +21,10 @@ export default function Index() {
   const { cartOpen, setCartOpen } = useCart()
 
   return (
-    <main className="bg-background">
+    <main className="bg-background p-2">
       {/* Hero Section Recreated from Image */}
-      <section className="relative w-full min-h-screen bg-gradient-to-br from-[#e8edf2] to-[#d6dfeb] text-[#0f172a] overflow-hidden pt-24 pb-12 px-6 lg:px-12 font-sans">
-        <div className="max-w-[1600px] mx-auto">
+      <section className="relative  w-full min-h-screen bg-background text-[#0f172a] overflow-hidden pt-24 pb-12 px-6 lg:px-12 font-sans">
+        <div className="max-w-[1600px] mx-auto p-6">
           {/* Top Half */}
           <div className="flex flex-col lg:flex-row justify-between items-start gap-12 lg:gap-8">
             {/* Left Column: Model & Badges */}
@@ -142,7 +143,7 @@ export default function Index() {
       </section>
 
       {/* Trust & Success Section */}
-      <section className="bg-white py-20 md:py-32 border-b border-black/5">
+      <section className="bg-background py-20 md:py-32 border-b border-black/5">
         <div className="container mx-auto px-6 lg:px-12">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-24 items-center max-w-[1400px] mx-auto">
             {/* Image Side */}
