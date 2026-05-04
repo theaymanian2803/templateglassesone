@@ -21,7 +21,8 @@ export default function Cart() {
   }
 
   return (
-    <main className="container mx-auto px-4 md:px-8 py-12 max-w-5xl">
+    <main className="container mx-auto h-screen px-4 md:px-8 py-12 max-w-5xl">
+      <div className="mt-16"></div>
       <h1 className="font-serif text-2xl md:text-3xl mb-8">Shopping Cart ({itemCount})</h1>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">

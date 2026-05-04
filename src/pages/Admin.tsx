@@ -2,7 +2,7 @@ import BrandsManager from '@/components/admin/BrandsManager'
 import CategoriesManager from '@/components/admin/CategoriesManager'
 import OrdersManager from '@/components/admin/OrdersManager'
 import ProductImageUpload from '@/components/admin/ProductImageUpload'
-import ThemeManager from '@/components/admin/ThemeManager' // Added Import
+import ThemeManager from '@/components/admin/ThemeManager'
 import { useAuth } from '@/contexts/AuthContext'
 import { supabase } from '@/integrations/supabase/client'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
@@ -15,7 +15,6 @@ const SHAPES = ['round', 'square', 'aviator', 'cat-eye', 'rectangle', 'oval', 'g
 const MATERIALS = ['acetate', 'metal', 'titanium', 'tr90', 'mixed']
 const LEGACY_CATEGORIES = ['sunglasses', 'bluelight', 'prescription']
 
-// Added 'Theme' to tabs
 const TABS = ['Products', 'Categories', 'Brands', 'Orders', 'Theme'] as const
 
 const emptyForm = {
@@ -229,7 +228,7 @@ export default function Admin() {
           {activeTab === 'Categories' && <CategoriesManager />}
           {activeTab === 'Brands' && <BrandsManager />}
           {activeTab === 'Orders' && <OrdersManager />}
-          {activeTab === 'Theme' && <ThemeManager />} {/* Added Theme Tab Component */}
+          {activeTab === 'Theme' && <ThemeManager />}
           {activeTab === 'Products' && (
             <>
               <div className="flex items-center justify-between mb-6">
@@ -376,41 +375,17 @@ export default function Admin() {
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="col-span-1 md:col-span-2 space-y-4">
-                      <label className="text-xs font-sans text-muted-foreground block">
-                        Product Images
-                      </label>
-                      {form.image_urls.map((url, index) => (
-                        <div key={index} className="flex items-start gap-4">
-                          <div className="flex-grow">
-                            <ProductImageUpload
-                              imageUrl={url}
-                              onImageChange={(newUrl) => {
-                                const newUrls = [...form.image_urls]
-                                newUrls[index] = newUrl
-                                update('image_urls', newUrls)
-                              }}
-                            />
-                          </div>
-                          <button
-                            type="button"
-                            onClick={() => {
-                              const newUrls = form.image_urls.filter((_, i) => i !== index)
-                              update('image_urls', newUrls)
-                            }}
-                            className="p-2 text-muted-foreground hover:text-destructive transition-colors mt-8">
-                            <Trash2 size={20} />
-                          </button>
-                        </div>
-                      ))}
-                      <button
-                        type="button"
-                        onClick={() => update('image_urls', [...form.image_urls, ''])}
-                        className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground">
-                        <Plus size={16} /> Add Image
-                      </button>
-                    </div>
+                  <div className="space-y-4">
+                    <label className="text-xs font-sans text-muted-foreground block">
+                      Product Images
+                    </label>
+                    <ProductImageUpload
+                      imageUrls={form.image_urls}
+                      onImagesChange={(urls) => update('image_urls', urls)}
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
                     <div>
                       <label className="text-xs font-sans text-muted-foreground mb-1 block">
                         Stock
@@ -424,34 +399,52 @@ export default function Admin() {
                         className={inputClass}
                       />
                     </div>
+                    <div>
+                      <label className="text-xs font-sans text-muted-foreground mb-1 block">
+                        Lens width
+                      </label>
+                      <input
+                        placeholder="e.g. 52mm"
+                        value={form.lens_width}
+                        onChange={(e) => update('lens_width', e.target.value)}
+                        className={inputClass}
+                      />
+                    </div>
+                    <div>
+                      <label className="text-xs font-sans text-muted-foreground mb-1 block">
+                        Bridge width
+                      </label>
+                      <input
+                        placeholder="e.g. 18mm"
+                        value={form.bridge_width}
+                        onChange={(e) => update('bridge_width', e.target.value)}
+                        className={inputClass}
+                      />
+                    </div>
+                    <div>
+                      <label className="text-xs font-sans text-muted-foreground mb-1 block">
+                        Temple length
+                      </label>
+                      <input
+                        placeholder="e.g. 145mm"
+                        value={form.temple_length}
+                        onChange={(e) => update('temple_length', e.target.value)}
+                        className={inputClass}
+                      />
+                    </div>
+                    <div>
+                      <label className="text-xs font-sans text-muted-foreground mb-1 block">
+                        Weight
+                      </label>
+                      <input
+                        placeholder="e.g. 24g"
+                        value={form.weight}
+                        onChange={(e) => update('weight', e.target.value)}
+                        className={inputClass}
+                      />
+                    </div>
                   </div>
 
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    <input
-                      placeholder="Lens width"
-                      value={form.lens_width}
-                      onChange={(e) => update('lens_width', e.target.value)}
-                      className={inputClass}
-                    />
-                    <input
-                      placeholder="Bridge width"
-                      value={form.bridge_width}
-                      onChange={(e) => update('bridge_width', e.target.value)}
-                      className={inputClass}
-                    />
-                    <input
-                      placeholder="Temple length"
-                      value={form.temple_length}
-                      onChange={(e) => update('temple_length', e.target.value)}
-                      className={inputClass}
-                    />
-                    <input
-                      placeholder="Weight"
-                      value={form.weight}
-                      onChange={(e) => update('weight', e.target.value)}
-                      className={inputClass}
-                    />
-                  </div>
                   <button
                     type="submit"
                     disabled={addMutation.isPending}
