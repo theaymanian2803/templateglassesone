@@ -21,7 +21,7 @@ export default function Index() {
   const { cartOpen, setCartOpen } = useCart()
 
   return (
-    <main className="bg-background p-2">
+    <main className="bg-background">
       {/* Hero Section Recreated from Image */}
       <section className="relative  w-full min-h-screen bg-background text-[#0f172a] overflow-hidden pt-24 pb-12 px-6 lg:px-12 font-sans">
         <div className="max-w-[1600px] mx-auto p-6">

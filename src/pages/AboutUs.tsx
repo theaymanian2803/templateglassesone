@@ -21,25 +21,23 @@ const staggerContainer = {
 
 export default function AboutUs() {
   return (
-    // Updated background and layout styling, adding a border-t to feel connected to the rest of the site.
-    <main className="w-full bg-background selection:bg-black selection:text-white font-sans border-t border-border/50">
+    // Cleaned up background class using our custom utility
+    <main className="w-full bg-gradient-bg selection:bg-black selection:text-white font-sans border-t border-border/50">
       {/* --- Section 1: Hero-like Layout --- */}
       <section className="container mx-auto px-4 md:px-8 py-16 lg:py-24 max-w-7xl mt-12">
         <div className="grid grid-cols-1 lg:grid-cols-[1fr,minmax(auto,1fr)] gap-12 lg:gap-24 items-start">
-          {/* Left: Framed Image Column, adapted with beveled corners on white area as in reference */}
+          {/* Left: Framed Image Column */}
           <motion.div
             className="relative h-[600px] lg:h-[750px] w-full"
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 1, ease: 'easeOut' }}>
-            {/* White card with custom polygon shape (beveled bottom-right corner) */}
             <div
               className="absolute inset-0 bg-white border border-border overflow-hidden p-6"
               style={{
                 clipPath:
                   'polygon(0% 0%, 100% 0%, 100% calc(100% - 40px), calc(100% - 40px) 100%, 0% 100%, 0% 0px)',
               }}>
-              {/* Image framed with a border and object-cover */}
               <div className="w-full h-full border-[10px] border-white z-10">
                 <img
                   src="https://plus.unsplash.com/premium_photo-1693222144068-513f78a25a29?q=80&w=987&auto=format&fit=crop"
@@ -48,7 +46,6 @@ export default function AboutUs() {
                 />
               </div>
 
-              {/* Decorative placeholder elements inspired by reference */}
               <div className="absolute top-1/2 left-6 transform -translate-y-1/2 flex flex-col gap-3">
                 <img
                   src="/images/placeholder-profile.jpg"
@@ -61,7 +58,6 @@ export default function AboutUs() {
               </div>
             </div>
 
-            {/* Floating generic date badge */}
             <div className="absolute bottom-12 right-12 lg:bottom-12 lg:-right-12 w-32 h-32 bg-white rounded-full border border-border flex items-center justify-center p-2 z-20">
               <div className="w-full h-full border border-dashed border-border rounded-full flex flex-col items-center justify-center text-center">
                 <span className="text-xs uppercase tracking-widest text-muted-foreground/80">
@@ -72,13 +68,12 @@ export default function AboutUs() {
             </div>
           </motion.div>
 
-          {/* Right: Typography & Gibberish Content with CTA button */}
+          {/* Right: Typography & Gibberish Content */}
           <motion.div
             className="space-y-8 lg:pl-10 text-center lg:text-left flex flex-col items-center lg:items-start"
             variants={staggerContainer}
             initial="hidden"
             animate="visible">
-            {/* Small centered generic badge at top */}
             <motion.div variants={fadeUp} className="flex justify-center w-full">
               <div className="bg-white border border-border rounded-full px-5 py-2 font-sans text-sm font-medium text-[#1a2b3c]/80 flex items-center gap-2">
                 <span className="w-2 h-2 rounded-full bg-border"></span>
@@ -86,17 +81,14 @@ export default function AboutUs() {
               </div>
             </motion.div>
 
-            {/* Large generic title */}
             <motion.div variants={fadeUp}>
               <h1 className="font-serif text-4xl md:text-5xl lg:text-7xl text-[#1a2b3c] leading-[1.05] tracking-tighter">
                 Curabitur blandit tempus porttitor.
               </h1>
             </motion.div>
 
-            {/* Lighter line for visual break */}
             <motion.div variants={fadeUp} className="w-16 h-[1px] bg-border/50" />
 
-            {/* Paragraphs with Lorem Ipsum gibberish, dark navy text */}
             <motion.div
               variants={fadeUp}
               className="space-y-6 text-base md:text-lg text-[#1a2b3c]/80 font-light leading-relaxed">
@@ -112,7 +104,6 @@ export default function AboutUs() {
               </p>
             </motion.div>
 
-            {/* Call-to-action button and detail, with dark navy button as in reference */}
             <motion.div
               variants={fadeUp}
               className="flex flex-wrap items-center gap-4 justify-center lg:justify-start pt-4 w-full">
@@ -125,8 +116,8 @@ export default function AboutUs() {
         </div>
       </section>
 
-      {/* --- Section 2: Additional "Nice Content" Feature Grid for template appeal --- */}
-      <section className="container mx-auto px-4 md:px-8 py-24 max-w-7xl border-t border-border/50 mt-12 bg-white">
+      {/* --- Section 2: Feature Grid --- */}
+      <section className="container mx-auto px-4 md:px-8 py-24 max-w-7xl border-t border-border/50 mt-12">
         <motion.div
           className="text-center mb-16 space-y-4"
           initial={{ opacity: 0, y: 20 }}
@@ -139,17 +130,15 @@ export default function AboutUs() {
           </p>
         </motion.div>
 
-        {/* 3-column feature card grid, using beveled corners on white cards */}
         <motion.div
           className="grid grid-cols-1 md:grid-cols-3 gap-8"
           variants={staggerContainer}
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: '-100px' }}>
-          {/* Feature Card 1 */}
           <motion.div
             variants={fadeUp}
-            className="bg-white border border-border p-10 hover:shadow-lg transition-shadow relative"
+            className="bg-white border border-border p-10 hover:shadow-lg transition-shadow relative group"
             style={{
               clipPath:
                 'polygon(20px 0%, 100% 0%, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0% 100%, 0% 20px)',
@@ -167,10 +156,9 @@ export default function AboutUs() {
             </div>
           </motion.div>
 
-          {/* Feature Card 2 */}
           <motion.div
             variants={fadeUp}
-            className="bg-white border border-border p-10 hover:shadow-lg transition-shadow relative"
+            className="bg-white border border-border p-10 hover:shadow-lg transition-shadow relative group"
             style={{
               clipPath:
                 'polygon(20px 0%, 100% 0%, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0% 100%, 0% 20px)',
@@ -188,10 +176,9 @@ export default function AboutUs() {
             </div>
           </motion.div>
 
-          {/* Feature Card 3 */}
           <motion.div
             variants={fadeUp}
-            className="bg-white border border-border p-10 hover:shadow-lg transition-shadow relative"
+            className="bg-white border border-border p-10 hover:shadow-lg transition-shadow relative group"
             style={{
               clipPath:
                 'polygon(20px 0%, 100% 0%, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0% 100%, 0% 20px)',

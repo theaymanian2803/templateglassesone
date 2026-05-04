@@ -252,7 +252,7 @@ export default function Header() {
 
       {/* --- 2. THE COMPACT BOTTOM PILL (Hidden on Desktop) --- */}
       <div
-        className={`fixed bottom-6 left-1/2 -translate-x-1/2 z-[60] md:hidden transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] font-sans ${
+        className={`fixed bottom-6 left-1/2 -translate-x-1/2 z-[60] md:hidden transition-all duration-500 ease-smooth font-sans ${
           isScrolled && !mobileMenuOpen
             ? 'translate-y-0 opacity-100 scale-100 pointer-events-auto'
             : 'translate-y-24 opacity-0 scale-95 pointer-events-none'
@@ -296,7 +296,7 @@ export default function Header() {
       />
 
       <div
-        className={`fixed bottom-6 left-1/2 -translate-x-1/2 z-[70] w-[calc(100%-3rem)] max-w-md md:hidden transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] origin-bottom font-sans ${
+        className={`fixed bottom-6 left-1/2 -translate-x-1/2 z-[70] w-[calc(100%-3rem)] max-w-md md:hidden transition-all duration-500 ease-smooth origin-bottom font-sans ${
           mobileMenuOpen
             ? 'translate-y-0 opacity-100 scale-100 pointer-events-auto'
             : 'translate-y-20 opacity-0 scale-95 pointer-events-none'

@@ -51,6 +51,17 @@
     --charcoal: 220 15% 25%;
     --warm-gray: 30 10% 60%;
     --gold: 38 60% 55%;
+
+    /* Gradient base tokens */
+    --gradient-from: 210 28% 93%; /* #e8edf2 */
+    --gradient-to: 114 64% 85%; /* #c5f1c0 */
+
+    /* The dynamic gradient variable */
+    --gradient-bg: linear-gradient(
+      to bottom right,
+      hsl(var(--gradient-from)),
+      hsl(var(--gradient-to))
+    );
   }
 
   .dark {
@@ -81,6 +92,10 @@
     --sidebar-accent-foreground: 40 33% 96%;
     --sidebar-border: 220 15% 20%;
     --sidebar-ring: 40 33% 96%;
+
+    /* Gradient tokens (dark mode defaults) */
+    --gradient-from: 220 20% 12%;
+    --gradient-to: 220 20% 8%;
   }
 }
 
@@ -90,10 +105,15 @@
   }
 
   body {
-    @apply bg-background text-foreground font-sans antialiased;
+    @apply text-foreground font-sans antialiased min-h-screen bg-gradient-bg;
   }
 
-  h1, h2, h3, h4, h5, h6 {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     font-family: 'Playfair Display', serif;
   }
 }
@@ -143,6 +163,10 @@
 }
 
 @layer utilities {
+  .bg-gradient-bg {
+    background-image: var(--gradient-bg);
+  }
+
   .animate-fade-up {
     animation: fadeUp 0.6s ease-out forwards;
   }
@@ -164,6 +188,10 @@
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }

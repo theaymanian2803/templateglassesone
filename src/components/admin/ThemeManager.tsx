@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react'
-import { Save, RotateCcw, Palette } from 'lucide-react'
+import { Palette, RotateCcw, Save } from 'lucide-react'
+import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
 
 // Helper: Converts Hex (from color picker) to HSL string (for Tailwind)
@@ -41,10 +41,12 @@ function hexToHSL(hex: string) {
 
 export default function ThemeManager() {
   const [colors, setColors] = useState({
-    '--background': '#f5f0e6', // Approximate Hex for your cream
+    '--background': '#f5f0e6',
     '--foreground': '#293241',
     '--primary': '#364153',
     '--accent': '#ebdcc7',
+    '--gradient-from': '#e8edf2',
+    '--gradient-to': '#c5f1c0',
   })
 
   // Load saved colors on mount
@@ -79,6 +81,8 @@ export default function ThemeManager() {
       '--foreground': '#293241',
       '--primary': '#364153',
       '--accent': '#ebdcc7',
+      '--gradient-from': '#e8edf2',
+      '--gradient-to': '#c5f1c0',
     }
     setColors(defaultColors)
     localStorage.removeItem('site_theme')
@@ -103,7 +107,7 @@ export default function ThemeManager() {
         <div className="p-5 border border-border bg-card rounded-lg flex items-center justify-between">
           <div>
             <p className="font-medium text-sm">Background</p>
-            <p className="text-xs text-muted-foreground mt-1">Main website backdrop</p>
+            <p className="text-xs text-muted-foreground mt-1">Fallback website backdrop</p>
           </div>
           <input
             type="color"
@@ -151,6 +155,38 @@ export default function ThemeManager() {
             type="color"
             value={colors['--accent']}
             onChange={(e) => handleColorChange('--accent', e.target.value)}
+            className="w-12 h-12 p-1 rounded cursor-pointer bg-transparent border border-border"
+          />
+        </div>
+
+        {/* Gradient From Color */}
+        <div className="p-5 border border-border bg-card rounded-lg flex items-center justify-between">
+          <div>
+            <p className="font-medium text-sm">Gradient From</p>
+            <p className="text-xs text-muted-foreground mt-1">
+              Starting color for background gradient
+            </p>
+          </div>
+          <input
+            type="color"
+            value={colors['--gradient-from']}
+            onChange={(e) => handleColorChange('--gradient-from', e.target.value)}
+            className="w-12 h-12 p-1 rounded cursor-pointer bg-transparent border border-border"
+          />
+        </div>
+
+        {/* Gradient To Color */}
+        <div className="p-5 border border-border bg-card rounded-lg flex items-center justify-between">
+          <div>
+            <p className="font-medium text-sm">Gradient To</p>
+            <p className="text-xs text-muted-foreground mt-1">
+              Ending color for background gradient
+            </p>
+          </div>
+          <input
+            type="color"
+            value={colors['--gradient-to']}
+            onChange={(e) => handleColorChange('--gradient-to', e.target.value)}
             className="w-12 h-12 p-1 rounded cursor-pointer bg-transparent border border-border"
           />
         </div>
