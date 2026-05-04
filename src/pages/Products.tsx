@@ -171,11 +171,11 @@ export default function Products() {
   )
 
   return (
-    <main className="w-full  min-h-screen bg-background text-[#1a2b3c] font-sans pb-24 selection:bg-[#1a2b3c] selection:text-white mt-12">
-      <div className="container mx-auto px-4 md:px-8 py-12 lg:py-20 max-w-7xl">
+    <main className="w-full  min-h-screen bg-background text-[#1a2b3c] font-sans pb-24 selection:bg-[#1a2b3c] selection:text-white ">
+      <div className="container mx-auto  px-4 md:px-8 py-12 lg:py-20 max-w-7xl">
         {/* Header Section */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12 border-b border-[#1a2b3c]/10 pb-8">
-          <div>
+          <div className="mt-12">
             <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl text-[#1a2b3c] leading-[1.1] tracking-tight">
               {searchQuery ? `Results for "${searchQuery}"` : 'All Frames'}
             </h1>

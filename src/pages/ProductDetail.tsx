@@ -30,9 +30,10 @@ export default function ProductDetail() {
   const images = product.image_urls
 
   return (
-    <main className="w-full mt-24 lg:mt-12 min-h-screen bg-background text-[#1a2b3c] font-sans pb-24 selection:bg-[#1a2b3c] selection:text-white">
+    <main className="w-full min-h-screen bg-background text-[#1a2b3c] font-sans pb-24 selection:bg-[#1a2b3c] selection:text-white">
       <div className="container mx-auto px-4 md:px-8 py-8 md:py-16 max-w-7xl">
         {/* Navigation / Back Button - Styled as a pill */}
+        <div className="lg:mt-12"></div>
         <Link
           to="/products"
           className="inline-flex items-center gap-2 px-5 py-2.5 bg-white border border-[#1a2b3c]/10 rounded-full text-xs font-sans tracking-widest uppercase text-[#1a2b3c]/70 hover:text-[#1a2b3c] hover:border-[#1a2b3c]/30 hover:shadow-sm transition-all mb-10 md:mb-16 w-fit">

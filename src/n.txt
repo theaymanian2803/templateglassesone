@@ -1,1 +1,0 @@
-bg-gradient-to-br from-[#e8edf2] to-[#c5f1c0]
